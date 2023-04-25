@@ -38,28 +38,19 @@ let listofservices = [
         service : "Low level design "
     }
 ]
-
-router.get('/', (request, response) => {
-    response.send("welcome to Service page")
+router.get("/", (request,response) => {
+    response.send("Welcome to service page")
+})
+router.route("/:id")
+   .get( (request,response) => {
+    response.send(`service : ${request.services.service}`)
 })
 
-router.get("/:id", (request, response) => {
-    const serviceid = Number(request.params.id);
-    const getservice = listofservices.find((serve) => serve.id === serviceid );
-
-    if(!getservice)
-    {
-        response.status(500).send("Invalid service code");
-        console.log(request.params.id);
-    }
-
-    else
-    {
-        response.send(getservice.service)
-    }
+router.param("id", (request,response,next,id) => {
+    request.services = listofservices[id]
+    console.log(request.services)
+    next()
 })
-
-
 
 
 module.exports = router ;
